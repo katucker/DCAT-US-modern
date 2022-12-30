@@ -1,0 +1,135 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.ed.gov/schemas/distribution.schema.json",
+    "title": "Project Open Data Distribution",
+    "description": "Validates an entire collection of common core metadata JSON objects. Agencies produce said collections in the form of Data.json files.",
+    "type": "object",
+    "properties": {
+      "@type": {
+        "title": "Metadata Context",
+        "description": "IRI for the JSON-LD data type. This should be dcat:Distribution for each Distribution",
+        "enum": [
+          "dcat:Distribution"
+        ]
+      },
+      "downloadURL": {
+          "title": "Download URL",
+          "description": "URL providing direct access to a downloadable file of a dataset",
+          "type": "string",
+          "format": "uri"
+      },
+      "accessURL": {
+          "title": "Access URL",
+          "description": "URL providing indirect access to a dataset",
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "null"
+            }
+          ]
+      },
+      "description": {
+        "title": "Description",
+        "description": "Human-readable description of the distribution",
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": {
+        "title": "Title",
+        "description": "Human-readable name of the distribution",
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "conformsTo": {
+        "title": "Data Standard",
+        "description": "URI used to identify a standardized specification the distribution conforms to.",
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "uri"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "describedBy": {
+        "title": "Data Dictionary",
+        "description": "URL to the data dictionary for the distribution.",
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "uri"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "oneOf": [
+      { "required": ["downloadURL"] },
+      { "required": ["accessURL"] }
+    ],
+    "$defs": {
+      "mimeType": {
+        "title": "IANA Media Type or MIME Type",
+        "description": "The machine-readable file format (IANA Media Type or MIME Type) of the associated URL",
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[-\\w]+/[-\\w]+(\\.[-\\w]+)*([+][-\\w]+)?$"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "dependentSchemas": {
+      "downloadURL": {
+        "$comment": "Require the mediaType property and allow the format property if the downloadURL property is present.",
+        "properties": {
+          "mediaType": { "$ref": "#/$defs/mimeType" },
+          "format": {
+            "title": "Format",
+            "description": "A human-readable description of the file format of a distribution",
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [ "mediaType" ]
+      },
+      "describedBy": {
+        "$comment": "Require the describedByType property if the describedBy property is present.",
+        "properties": {
+          "describedByType": { "$ref": "#/$defs/mimeType" }
+        },
+        "required": ["describedByType"]
+      }
+    }
+  }
